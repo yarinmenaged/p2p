@@ -1,0 +1,9 @@
+# Build output
+bin/
+
+# Runtime data directories (not source code)
+client/client_files/
+server/server_files/
+
+# Object files
+*.o
