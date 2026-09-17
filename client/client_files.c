@@ -7,6 +7,7 @@
 #define BUFFER_SIZE 1024
 
 Peer local_peer;
+pthread_mutex_t local_peer_mutex = PTHREAD_MUTEX_INITIALIZER;
 FileInfo available_files[MAX_FILES];
 int available_file_count = 0;
 
@@ -56,7 +57,7 @@ int get_files(int tracker_fd)
 {
     char buffer[BUFFER_SIZE];
  
-    send_all(tracker_fd, "GET_FILES", strlen("GET_FILES"));
+    send_all(tracker_fd, "GET_FILES\n", strlen("GET_FILES\n"));
  
     if (recv_until_end(tracker_fd, buffer, sizeof(buffer)) < 0)
     {
@@ -286,20 +287,31 @@ static int merge_file(SharedFile *file, int port)
 int merge_if_complete(int file_id)
 {
     SharedFile *file;
+    SharedFile file_snapshot;
+    int port;
+ 
+    pthread_mutex_lock(&local_peer_mutex);
  
     file = get_peer_file(&local_peer, file_id);
  
     if (file == NULL)
     {
+        pthread_mutex_unlock(&local_peer_mutex);
         return -1;
     }
  
     if (file->chunk_count != file->total_chunks)
     {
+        pthread_mutex_unlock(&local_peer_mutex);
         return 0;
     }
  
+    file_snapshot = *file;
+    port = local_peer.address.port;
+ 
+    pthread_mutex_unlock(&local_peer_mutex);
+ 
     printf("File %d is complete. Merging file...\n", file_id);
  
-    return merge_file(file, local_peer.address.port);
+    return merge_file(&file_snapshot, port);
 }

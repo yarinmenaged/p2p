@@ -55,7 +55,9 @@ static void *handle_peer(void *arg)
     {
         printf("Received request for file %d chunk %d\n", header.file_id, header.chunk_id);
         
+        pthread_mutex_lock(&local_peer_mutex);
         chunk = get_peer_chunk(&local_peer, header.file_id, header.chunk_id);
+        pthread_mutex_unlock(&local_peer_mutex);
  
         if (chunk != NULL)
         {
@@ -276,7 +278,7 @@ int main(int argc, char *argv[])
  
     printf("Connected to tracker!\n");
  
-    snprintf(message, sizeof(message), "REGISTER %d", peer_port);
+    snprintf(message, sizeof(message), "REGISTER %d\n", peer_port);
  
     if (send(tracker_fd, message, strlen(message), 0) < 0)
     {
@@ -347,7 +349,7 @@ int main(int argc, char *argv[])
 
         else if (choice == 5)
         {
-            send_all(tracker_fd, "DISCONNECT", strlen("DISCONNECT"));
+            send_all(tracker_fd, "DISCONNECT\n", strlen("DISCONNECT\n"));
             close(tracker_fd);
             break;
         }

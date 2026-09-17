@@ -100,6 +100,64 @@ static void *tracker_cli(void *arg)
 }
 
 /**************************************************************************
+ *!  static int recv_command(int client_fd, char *out, int out_size, char *pending, int *pending_len, int pending_cap)
+ **************************************************************************
+ *  \brief Reads one newline-terminated command from client_fd. TCP has no message
+ *         boundaries, so a single recv() can contain part of a command, a whole
+ *         command, or several; leftover bytes are kept in `pending` across calls.
+ *  \param[in] client_fd Socket descriptor to read from.
+ *  \param[out] out Buffer that receives the null-terminated command, without the newline.
+ *  \param[in] out_size Size of out.
+ *  \param[in,out] pending Buffer holding bytes already read but not yet consumed.
+ *  \param[in,out] pending_len Number of valid bytes currently stored in pending.
+ *  \param[in] pending_cap Capacity of pending.
+ *  \return Length of the command on success, 0 on clean disconnect, -1 on error.
+ **************************************************************************/
+static int recv_command(int client_fd, char *out, int out_size, char *pending, int *pending_len, int pending_cap)
+{
+    char *newline;
+    int idx;
+    int remaining;
+    int bytes_received;
+    int line_len;
+
+    while (1)
+    {
+        newline = memchr(pending, '\n', *pending_len);
+
+        if (newline != NULL)
+        {
+            idx = (int)(newline - pending);
+            line_len = (idx < out_size - 1) ? idx : out_size - 1;
+
+            memcpy(out, pending, line_len);
+            out[line_len] = '\0';
+
+            remaining = *pending_len - idx - 1;
+            memmove(pending, pending + idx + 1, remaining);
+            *pending_len = remaining;
+
+            return line_len;
+        }
+
+        if (*pending_len >= pending_cap)
+        {
+            /* Command too long for the buffer. drop it so we don't get stuck. */
+            *pending_len = 0;
+        }
+
+        bytes_received = recv(client_fd, pending + *pending_len, pending_cap - *pending_len, 0);
+
+        if (bytes_received <= 0)
+        {
+            return bytes_received;
+        }
+
+        *pending_len += bytes_received;
+    }
+}
+
+/**************************************************************************
  *!  static void *handle_client(void *arg)
  **************************************************************************
  *  \brief Per-connection thread that parses tracker protocol commands from a peer/client and responds.
@@ -112,6 +170,8 @@ static void *handle_client(void *arg)
     int bytes_received;
     int peer_port = -1;
     char buffer[BUFFER_SIZE];
+    char pending[BUFFER_SIZE * 2];
+    int pending_len = 0;
     char client_ip[INET_ADDRSTRLEN];
     char response[BUFFER_SIZE];
     struct sockaddr_in client_addr;
@@ -149,7 +209,7 @@ static void *handle_client(void *arg)
     {
         memset(buffer, 0, sizeof(buffer));
  
-        bytes_received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+        bytes_received = recv_command(client_fd, buffer, sizeof(buffer), pending, &pending_len, sizeof(pending));
         if (bytes_received < 0)
         {
             perror("recv");
@@ -161,8 +221,6 @@ static void *handle_client(void *arg)
             printf("Client disconnected.\n");
             break;
         }
- 
-        buffer[bytes_received] = '\0';
  
         if (peer_port > 0)
         {

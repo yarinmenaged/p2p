@@ -1,9 +1,11 @@
 #ifndef CLIENT_FILES_H
 #define CLIENT_FILES_H
 
+#include <pthread.h>
 #include "../common.h"
 
 extern Peer local_peer;
+extern pthread_mutex_t local_peer_mutex; /* guards all reads/writes of local_peer across threads */
 extern FileInfo available_files[MAX_FILES];
 extern int available_file_count;
 

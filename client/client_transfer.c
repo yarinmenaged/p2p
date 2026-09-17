@@ -1,12 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <pthread.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include "client_transfer.h"
 #include "client_files.h"
 
 #define BUFFER_SIZE 1024
+
+static pthread_mutex_t tracker_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef enum
 {
@@ -15,6 +19,13 @@ typedef enum
     PEER_FOUND,
     PEER_NOT_FOUND
 } TrackerResponse;
+
+typedef struct
+{
+    int tracker_fd;
+    int file_id;
+    int chunk_id;
+} ChunkDownloadArgs;
 
 /**************************************************************************
  *!  static int update_chunk_at_tracker(int file_id, int chunk_id, int tracker_fd)
@@ -28,10 +39,15 @@ typedef enum
 static int update_chunk_at_tracker(int file_id, int chunk_id, int tracker_fd)
 {
     char request[BUFFER_SIZE];
+    int result;
  
-    snprintf(request, sizeof(request), "UPDATE_CHUNK %d %d", file_id, chunk_id);
+    snprintf(request, sizeof(request), "UPDATE_CHUNK %d %d\n", file_id, chunk_id);
  
-    if (send_all(tracker_fd, request, strlen(request)) < 0)
+    pthread_mutex_lock(&tracker_mutex);
+    result = send_all(tracker_fd, request, strlen(request));
+    pthread_mutex_unlock(&tracker_mutex);
+ 
+    if (result < 0)
     {
         return -1;
     }
@@ -61,10 +77,13 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
     char chunk_data[CHUNK_SIZE];
     SharedFile *file;
  
-    snprintf(message, sizeof(message), "GET_CHUNK_SOURCE %d %d", file_id, chunk_id);
+    snprintf(message, sizeof(message), "GET_CHUNK_SOURCE %d %d\n", file_id, chunk_id);
+ 
+    pthread_mutex_lock(&tracker_mutex);
  
     if (send(tracker_fd, message, strlen(message), 0) < 0)
     {
+        pthread_mutex_unlock(&tracker_mutex);
         perror("send");
         return ERROR;
     }
@@ -74,11 +93,14 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
     bytes_received = recv_all(tracker_fd, &source_header, sizeof(source_header));
     if (bytes_received < 0)
     {
+        pthread_mutex_unlock(&tracker_mutex);
         return ERROR;
     }
 
     if (source_header.type == SOURCE_PEER)
     {
+        pthread_mutex_unlock(&tracker_mutex);
+
         *peer = source_header.address;
         strcpy(filename, source_header.filename);
         *total_chunks = source_header.total_chunks;
@@ -89,33 +111,42 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
     {
         if (recv_all(tracker_fd, &header, sizeof(header)) < 0)
         {
+            pthread_mutex_unlock(&tracker_mutex);
             printf("Failed to receive chunk header from server\n");
             return ERROR;
         }
     
         if (header.type != CHUNK_FOUND)
         {
+            pthread_mutex_unlock(&tracker_mutex);
             printf("Server could not provide chunk\n");
             return ERROR;
         }
     
         if (header.file_id != file_id || header.chunk_id != chunk_id)
         {
+            pthread_mutex_unlock(&tracker_mutex);
             printf("Received unexpected chunk\n");
             return ERROR;
         }
     
         if (header.size <= 0 || header.size > CHUNK_SIZE)
         {
+            pthread_mutex_unlock(&tracker_mutex);
             printf("Invalid chunk size\n");
             return ERROR;
         }
     
         if (recv_all(tracker_fd, chunk_data, header.size) < 0)
         {
+            pthread_mutex_unlock(&tracker_mutex);
             printf("Failed to receive chunk data from server\n");
             return ERROR;
         }
+
+        pthread_mutex_unlock(&tracker_mutex);
+
+        pthread_mutex_lock(&local_peer_mutex);
 
         file = get_peer_file(&local_peer, file_id);
 
@@ -123,6 +154,7 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
         {
             if (local_peer.file_count >= MAX_FILES)
             {
+                pthread_mutex_unlock(&local_peer_mutex);
                 printf("Maximum number of files reached\n");
                 return ERROR;
             }
@@ -140,6 +172,7 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
 
         if (get_peer_chunk(&local_peer, file_id, chunk_id) != NULL)
         {
+            pthread_mutex_unlock(&local_peer_mutex);
             return CHUNK_ALREADY_EXISTS;
         }
 
@@ -149,6 +182,8 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
         memcpy(file->chunks[file->chunk_count].data, chunk_data, header.size);
         
         file->chunk_count++;
+
+        pthread_mutex_unlock(&local_peer_mutex);
 
         if (update_chunk_at_tracker(file_id, chunk_id, tracker_fd) < 0)
         {
@@ -161,6 +196,7 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
     }
     else
     {
+        pthread_mutex_unlock(&tracker_mutex);
         printf("Unknown source type\n");
         return ERROR;
     }
@@ -243,12 +279,15 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
     
         printf("Received chunk data: %d bytes\n", header.size);
 
+        pthread_mutex_lock(&local_peer_mutex);
+
         file = get_peer_file(&local_peer, header.file_id);
  
         if (file == NULL)
         {
             if (local_peer.file_count >= MAX_FILES)
             {
+                pthread_mutex_unlock(&local_peer_mutex);
                 printf("Maximum number of files reached\n");
                 close(peer_fd);
                 return;
@@ -268,6 +307,7 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
         
         if (file->chunk_count >= MAX_CHUNKS)
         {
+            pthread_mutex_unlock(&local_peer_mutex);
             printf("Maximum number of chunks reached for file %d\n", header.file_id);
             close(peer_fd);
             return;
@@ -275,6 +315,7 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
 
         if (get_peer_chunk(&local_peer, header.file_id, header.chunk_id) != NULL)
         {
+            pthread_mutex_unlock(&local_peer_mutex);
             printf("Chunk %d of file %d already exists on the current peer.\n", header.chunk_id, header.file_id);
             close(peer_fd);
             return;
@@ -287,6 +328,8 @@ static TrackerResponse get_chunk_source_from_tracker(int tracker_fd, int file_id
         
         file->chunk_count++;
         
+        pthread_mutex_unlock(&local_peer_mutex);
+
         printf("Chunk %d added to file %d\n", header.chunk_id, header.file_id);
 
         update_chunk_at_tracker(header.file_id, header.chunk_id, tracker_fd);
@@ -368,12 +411,33 @@ int download_chunk(int tracker_fd, int file_id, int chunk_id)
 }
 
 /**************************************************************************
+ *!  static void *download_chunk_thread(void *arg)
+ **************************************************************************
+ *  \brief Thread entry point that downloads a single chunk and frees its argument bundle.
+ *  \param[in] arg Pointer to a heap-allocated ChunkDownloadArgs (freed internally).
+ *  \return Always NULL.
+ **************************************************************************/
+static void *download_chunk_thread(void *arg)
+{
+    ChunkDownloadArgs *task;
+
+    task = (ChunkDownloadArgs *)arg;
+
+    download_chunk(task->tracker_fd, task->file_id, task->chunk_id);
+
+    free(task);
+
+    return NULL;
+}
+
+/**************************************************************************
  *!  int download_file(int tracker_fd, int file_id)
  **************************************************************************
- *  \brief Downloads every missing chunk of a file, one at a time.
+ *  \brief Downloads every missing chunk of a file, creating one thread per chunk so
+ *         transfers run in parallel. Waits for all of them to finish before returning.
  *  \param[in] tracker_fd Socket descriptor connected to the tracker.
  *  \param[in] file_id ID of the file to download.
- *  \return 0 on success, -1 if the file is unknown or a chunk download fails.
+ *  \return 0 on success, -1 if the file is unknown.
  **************************************************************************/
 int download_file(int tracker_fd, int file_id)
 {
@@ -381,6 +445,9 @@ int download_file(int tracker_fd, int file_id)
     int chunk_id;
     int total_chunks;
     SharedFile *file;
+    pthread_t threads[MAX_CHUNKS];
+    int thread_started[MAX_CHUNKS];
+    ChunkDownloadArgs *task;
  
     total_chunks = -1;
  
@@ -399,22 +466,48 @@ int download_file(int tracker_fd, int file_id)
         return -1;
     }
  
+    pthread_mutex_lock(&local_peer_mutex);
     file = get_peer_file(&local_peer, file_id);
- 
     if (file != NULL && file->chunk_count == total_chunks)
     {
+        pthread_mutex_unlock(&local_peer_mutex);
         printf("File %d already fully downloaded on this client\n", file_id);
         return 0;
     }
+    pthread_mutex_unlock(&local_peer_mutex);
  
     printf("Downloading file %d (%d chunks)...\n", file_id, total_chunks);
  
     for (chunk_id = 0; chunk_id < total_chunks; chunk_id++)
     {
-        if (download_chunk(tracker_fd, file_id, chunk_id) != 0)
+        thread_started[chunk_id] = 0;
+ 
+        task = malloc(sizeof(ChunkDownloadArgs));
+        if (task == NULL)
         {
-            printf("Failed to download chunk %d of file %d\n", chunk_id, file_id);
-            return -1;
+            perror("malloc");
+            continue;
+        }
+ 
+        task->tracker_fd = tracker_fd;
+        task->file_id = file_id;
+        task->chunk_id = chunk_id;
+ 
+        if (pthread_create(&threads[chunk_id], NULL, download_chunk_thread, task) != 0)
+        {
+            perror("pthread_create");
+            free(task);
+            continue;
+        }
+ 
+        thread_started[chunk_id] = 1;
+    }
+ 
+    for (chunk_id = 0; chunk_id < total_chunks; chunk_id++)
+    {
+        if (thread_started[chunk_id])
+        {
+            pthread_join(threads[chunk_id], NULL);
         }
     }
  
