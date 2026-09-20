@@ -212,8 +212,8 @@ static int merge_file(SharedFile *file, int port)
     FILE *output_file;
     int i;
     int chunk_id;
-    char directory[MAX_FILENAME_LENGTH];
-    char output_filename[MAX_FILENAME_LENGTH];
+    char directory[MAX_DIRNAME_LENGTH];
+    char output_filename[MAX_FILENAME_LENGTH + MAX_DIRNAME_LENGTH];
     char *filename;
  
     snprintf(directory, sizeof(directory), "client/client_files/%d", port);

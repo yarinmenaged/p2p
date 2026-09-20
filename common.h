@@ -8,6 +8,7 @@
 #define CHUNK_SIZE 1024
 #define MAX_CHUNKS 100
 #define MAX_FILENAME_LENGTH 300
+#define MAX_DIRNAME_LENGTH 300
 #define MAX_FILES 100
 
 typedef enum
