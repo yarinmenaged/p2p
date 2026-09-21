@@ -331,8 +331,6 @@ static void *handle_client(void *arg)
                 }
             }
 
-            print_tracker_menu();
-            printf("\n");
             continue;
         }
 

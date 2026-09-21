@@ -405,8 +405,6 @@ int download_chunk(int tracker_fd, int file_id, int chunk_id)
         return 1;
     }
 
-    merge_if_complete(file_id);
-
     return 0;
 }
 
@@ -510,6 +508,8 @@ int download_file(int tracker_fd, int file_id)
             pthread_join(threads[chunk_id], NULL);
         }
     }
+
+    merge_if_complete(file_id);
  
     printf("All chunks of file %d downloaded successfully\n", file_id);
  
