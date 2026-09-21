@@ -1,0 +1,179 @@
+Peer server is listening on port 6001...
+Connected to tracker!
+Tracker replied:
+REGISTER_OK
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: File 999 not found
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Enter chunk ID: File 999 doesn't exist.
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Enter chunk ID: Chunk 5 doesn't exist in file 2.
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Downloading file 1 (1 chunks)...
+Added file 1 to local peer
+Chunk 0 of file 1 received from server
+No peer found for file 1 chunk 0. Download directly from the server
+
+File 1 is complete. Merging file...
+File saved to client/client_files/6001/example_file.txt
+All chunks of file 1 downloaded successfully
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: File 1 already fully downloaded on this client
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+1     example_file.txt       56           1/1          [0]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Enter chunk ID: Added file 2 to local peer
+Chunk 0 of file 2 received from server
+No peer found for file 2 chunk 0. Download directly from the server
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Enter chunk ID: Chunk 0 of file 2 already exists on the current peer.
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+1     example_file.txt       56           1/1          [0]
+2     file1                  1024         1/5          [0]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: Peer connected: 127.0.0.1
+Received request for file 2 chunk 0
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+1     example_file.txt       56           1/1          [0]
+2     file1                  1024         1/5          [0]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+

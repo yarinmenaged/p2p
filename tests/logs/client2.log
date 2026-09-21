@@ -1,0 +1,71 @@
+Connected to tracker!
+Peer server is listening on port 6002...
+Tracker replied:
+REGISTER_OK
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Enter chunk ID: Added file 2 to local peer
+Chunk 1 of file 2 received from server
+No peer found for file 2 chunk 1. Download directly from the server
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+2     file1                  1024         1/5          [1]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: Peer connected: 127.0.0.1
+Received request for file 2 chunk 1
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+2     file1                  1024         1/5          [1]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+

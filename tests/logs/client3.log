@@ -1,0 +1,64 @@
+Connected to tracker!
+Peer server is listening on port 6003...
+Tracker replied:
+REGISTER_OK
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+Enter file ID: Downloading file 2 (5 chunks)...
+Selected peer: 127.0.0.1:6002
+Connected successfully to peer 127.0.0.1:6002
+Chunk found on peer: file 2 chunk 1, size 1024
+Received chunk data: 1024 bytes
+Added file 2 to local peer
+Chunk 1 added to file 2
+Chunk 4 of file 2 received from server
+No peer found for file 2 chunk 4. Download directly from the server
+
+Chunk 2 of file 2 received from server
+No peer found for file 2 chunk 2. Download directly from the server
+
+Selected peer: 127.0.0.1:6001
+Connected successfully to peer 127.0.0.1:6001
+Chunk found on peer: file 2 chunk 0, size 1024
+Received chunk data: 1024 bytes
+Chunk 0 added to file 2
+Chunk 3 of file 2 received from server
+No peer found for file 2 chunk 3. Download directly from the server
+
+File 2 is complete. Merging file...
+File saved to client/client_files/6003/file1
+All chunks of file 2 downloaded successfully
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+
+
+===== Local Files =====
+
+ID    Filename               Size         Progress     Chunks    
+2     file1                  5000         5/5          [1, 4, 2, 0, 3]
+
+
+===== P2P Client =====
+1. Download file
+2. Download chunk
+3. Show server files
+4. Show my files
+5. Exit
+
+Choose an option: 
+

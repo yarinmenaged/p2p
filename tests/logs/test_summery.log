@@ -1,0 +1,31 @@
+[PASS] 1. Tracker started
+[PASS] 2. Added file1 (5000 bytes)
+[PASS] 3. Added file2 (3000 bytes)
+[PASS] 4. Deleted file2
+[PASS] 5. Tracker rejects deletion of non-existent file
+[PASS] 6. Server contains example_file and file1 only
+[PASS] 7. Client 1 started
+[PASS] 8. Client 1 received server file list
+[PASS] 9. Client 1 rejects non-existent file
+[PASS] 10. Client 1 rejects chunk from non-existent file
+[PASS] 11. Client 1 rejects non-existent chunk
+[PASS] 12. Client 1 downloaded example_file
+[PASS] 13. Client 1 rejects duplicate file download
+[PASS] 14. Client 1 contains example_file
+[PASS] 15. Client 1 downloaded file1 chunk 0
+[PASS] 16. Client 1 rejects duplicate chunk download
+[PASS] 17. Client 1 contains file1 chunk 0
+[PASS] 18. Clients 2 and 3 completed the required downloads
+[PASS] 19. Client 1 owns file1 chunk 0
+[PASS] 20. Client 2 owns file1 chunk 1
+[PASS] 21. file1 exists in Client 3 directory
+[PASS] 22. file1 matches server file
+[PASS] 23. All three Clients disconnected
+[PASS] 24. Tracker has no active peers
+
+========================================
+              TEST SUMMARY
+========================================
+Passed: 24
+Failed: 0
+========================================
