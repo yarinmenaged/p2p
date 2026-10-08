@@ -299,8 +299,6 @@ int main(int argc, char *argv[])
     printf("Tracker replied:\n%.*s\n", (int)strcspn(buffer, "\n"), buffer);
     parse_file_list(buffer);
 
-    // update_file_in_tracker(tracker_fd, &local_peer.files[0]);
-
     while (1)
     {
         print_client_menu();
