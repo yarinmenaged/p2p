@@ -390,7 +390,7 @@ int download_chunk(int tracker_fd, int file_id, int chunk_id)
     }
     else if (peer_found == PEER_FOUND)
     {
-        printf("Selected peer: %s:%d\n", chunk_peer.ip, chunk_peer.port);
+        printf("Selected peer: %s:%d for chunk %d\n", chunk_peer.ip, chunk_peer.port, chunk_id);
  
         connect_to_peer(&chunk_peer, tracker_fd, file_id, chunk_id, filename, total_chunks);
     }

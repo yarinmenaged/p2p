@@ -298,9 +298,9 @@ Received from 127.0.0.1:6003: GET_FILES
 5. Exit
 Choose an option: 
 
-Received from 127.0.0.1:6003: GET_CHUNK_SOURCE 2 1
-
 Received from 127.0.0.1:6003: GET_CHUNK_SOURCE 2 0
+
+Received from 127.0.0.1:6003: GET_CHUNK_SOURCE 2 1
 
 Received from 127.0.0.1:6003: GET_CHUNK_SOURCE 2 2
 Server sent file 2 chunk 2 (1024 bytes)
@@ -308,6 +308,17 @@ Server sent file 2 chunk 2 (1024 bytes)
 Received from 127.0.0.1:6003: UPDATE_CHUNK 2 2
 File 2 added to peer
 Peer updated: file 2 chunk 2
+
+===== Tracker Menu =====
+1. Add file
+2. Delete file
+3. Show files
+4. Show active peers
+5. Exit
+Choose an option: 
+
+Received from 127.0.0.1:6003: UPDATE_CHUNK 2 0
+Peer updated: file 2 chunk 0
 
 ===== Tracker Menu =====
 1. Add file
@@ -331,33 +342,22 @@ Peer updated: file 2 chunk 4
 5. Exit
 Choose an option: 
 
-Received from 127.0.0.1:6003: UPDATE_CHUNK 2 1
-Peer updated: file 2 chunk 1
-
-===== Tracker Menu =====
-1. Add file
-2. Delete file
-3. Show files
-4. Show active peers
-5. Exit
-Choose an option: 
-
-Received from 127.0.0.1:6003: UPDATE_CHUNK 2 0
-Peer updated: file 2 chunk 0
-
-===== Tracker Menu =====
-1. Add file
-2. Delete file
-3. Show files
-4. Show active peers
-5. Exit
-Choose an option: 
-
 Received from 127.0.0.1:6003: GET_CHUNK_SOURCE 2 3
 Server sent file 2 chunk 3 (1024 bytes)
 
 Received from 127.0.0.1:6003: UPDATE_CHUNK 2 3
 Peer updated: file 2 chunk 3
+
+===== Tracker Menu =====
+1. Add file
+2. Delete file
+3. Show files
+4. Show active peers
+5. Exit
+Choose an option: 
+
+Received from 127.0.0.1:6003: UPDATE_CHUNK 2 1
+Peer updated: file 2 chunk 1
 
 ===== Tracker Menu =====
 1. Add file

@@ -166,7 +166,7 @@ static void *start_peer_server(void *arg)
         }
 
         inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
-        printf("Peer connected: %s\n", client_ip);
+        printf("\nPeer connected: %s\n", client_ip);
 
         client_fd_ptr = malloc(sizeof(int));
         if (client_fd_ptr == NULL)

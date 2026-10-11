@@ -20,17 +20,17 @@ ID    Filename               Size         Chunks
 2     file1                  5000         5         
 
 Enter file ID: Downloading file 2 (5 chunks)...
-Selected peer: 127.0.0.1:6002
-Selected peer: 127.0.0.1:6001
-Connected successfully to peer 127.0.0.1:6002
+Selected peer: 127.0.0.1:6001 for chunk 0
+Selected peer: 127.0.0.1:6002 for chunk 1
 Connected successfully to peer 127.0.0.1:6001
-Chunk found on peer: file 2 chunk 1, size 1024
+Chunk found on peer: file 2 chunk 0, size 1024
+Connected successfully to peer 127.0.0.1:6002
 Received chunk data: 1024 bytes
 Added file 2 to local peer
-Chunk 1 added to file 2
-Chunk found on peer: file 2 chunk 0, size 1024
-Received chunk data: 1024 bytes
 Chunk 0 added to file 2
+Chunk found on peer: file 2 chunk 1, size 1024
+Received chunk data: 1024 bytes
+Chunk 1 added to file 2
 Chunk 2 of file 2 received from server
 No peer found for file 2 chunk 2. Download directly from the server
 
@@ -57,7 +57,7 @@ Choose an option:
 ===== Local Files =====
 
 ID    Filename               Size         Progress     Chunks    
-2     file1                  5000         5/5          [1, 0, 2, 4, 3]
+2     file1                  5000         5/5          [0, 1, 2, 4, 3]
 
 
 ===== P2P Client =====

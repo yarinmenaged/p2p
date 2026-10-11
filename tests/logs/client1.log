@@ -196,7 +196,8 @@ ID    Filename               Size         Progress     Chunks
 4. Show my files
 5. Exit
 
-Choose an option: Peer connected: 127.0.0.1
+Choose an option: 
+Peer connected: 127.0.0.1
 Received request for file 2 chunk 0
 
 ===== P2P Client =====
