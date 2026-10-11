@@ -29,6 +29,13 @@ ID    Filename               Size         Chunks
 
 Choose an option: 
 
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
+
 Enter file ID: File 999 not found
 
 ===== P2P Client =====
@@ -39,6 +46,13 @@ Enter file ID: File 999 not found
 5. Exit
 
 Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
 
 Enter file ID: Enter chunk ID: File 999 doesn't exist.
 
@@ -51,6 +65,13 @@ Enter file ID: Enter chunk ID: File 999 doesn't exist.
 
 Choose an option: 
 
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
+
 Enter file ID: Enter chunk ID: Chunk 5 doesn't exist in file 2.
 
 ===== P2P Client =====
@@ -61,6 +82,13 @@ Enter file ID: Enter chunk ID: Chunk 5 doesn't exist in file 2.
 5. Exit
 
 Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
 
 Enter file ID: Downloading file 1 (1 chunks)...
 Added file 1 to local peer
@@ -79,6 +107,13 @@ All chunks of file 1 downloaded successfully
 5. Exit
 
 Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
 
 Enter file ID: File 1 already fully downloaded on this client
 
@@ -107,6 +142,13 @@ ID    Filename               Size         Progress     Chunks
 
 Choose an option: 
 
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
+
 Enter file ID: Enter chunk ID: Added file 2 to local peer
 Chunk 0 of file 2 received from server
 No peer found for file 2 chunk 0. Download directly from the server
@@ -120,6 +162,13 @@ No peer found for file 2 chunk 0. Download directly from the server
 5. Exit
 
 Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
 
 Enter file ID: Enter chunk ID: Chunk 0 of file 2 already exists on the current peer.
 

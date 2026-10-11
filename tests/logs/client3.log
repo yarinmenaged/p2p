@@ -12,24 +12,31 @@ REGISTER_OK
 
 Choose an option: 
 
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
+
 Enter file ID: Downloading file 2 (5 chunks)...
 Selected peer: 127.0.0.1:6002
+Selected peer: 127.0.0.1:6001
 Connected successfully to peer 127.0.0.1:6002
+Connected successfully to peer 127.0.0.1:6001
 Chunk found on peer: file 2 chunk 1, size 1024
 Received chunk data: 1024 bytes
 Added file 2 to local peer
 Chunk 1 added to file 2
-Chunk 4 of file 2 received from server
-No peer found for file 2 chunk 4. Download directly from the server
-
-Chunk 2 of file 2 received from server
-No peer found for file 2 chunk 2. Download directly from the server
-
-Selected peer: 127.0.0.1:6001
-Connected successfully to peer 127.0.0.1:6001
 Chunk found on peer: file 2 chunk 0, size 1024
 Received chunk data: 1024 bytes
 Chunk 0 added to file 2
+Chunk 2 of file 2 received from server
+No peer found for file 2 chunk 2. Download directly from the server
+
+Chunk 4 of file 2 received from server
+No peer found for file 2 chunk 4. Download directly from the server
+
 Chunk 3 of file 2 received from server
 No peer found for file 2 chunk 3. Download directly from the server
 
@@ -50,7 +57,7 @@ Choose an option:
 ===== Local Files =====
 
 ID    Filename               Size         Progress     Chunks    
-2     file1                  5000         5/5          [1, 4, 2, 0, 3]
+2     file1                  5000         5/5          [1, 0, 2, 4, 3]
 
 
 ===== P2P Client =====

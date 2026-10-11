@@ -315,6 +315,11 @@ int main(int argc, char *argv[])
     
         if (choice == 1)
         {
+            if (get_files(tracker_fd) == 0)
+            {
+                print_available_files();
+            }
+
             printf("Enter file ID: ");
             scanf("%d", &file_id);
 
@@ -323,6 +328,11 @@ int main(int argc, char *argv[])
  
         else if (choice == 2)
         {
+            if (get_files(tracker_fd) == 0)
+            {
+                print_available_files();
+            }
+            
             printf("Enter file ID: ");
             scanf("%d", &file_id);
 

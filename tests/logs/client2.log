@@ -1,5 +1,5 @@
-Connected to tracker!
 Peer server is listening on port 6002...
+Connected to tracker!
 Tracker replied:
 REGISTER_OK
 
@@ -11,6 +11,13 @@ REGISTER_OK
 5. Exit
 
 Choose an option: 
+
+
+===== Available Files =====
+
+ID    Filename               Size         Chunks    
+1     example_file.txt       56           1         
+2     file1                  5000         5         
 
 Enter file ID: Enter chunk ID: Added file 2 to local peer
 Chunk 1 of file 2 received from server
